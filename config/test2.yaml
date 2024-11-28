@@ -1,0 +1,6 @@
+generatorName: java
+inputSpec: "path/to/openapi-spec.yaml"
+outputDir: "${buildDir}/generated"
+configOptions:
+  library: spring-boot
+  dateLibrary: java8
