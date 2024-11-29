@@ -120,3 +120,56 @@ tasks.register<Copy>("three") {
 //    var mainSourceSet = javaExtension.sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
 //    compileClasspath.from(mainSourceSet.compileClasspath)
 //}
+
+
+
+val four by tasks.registering(org.openapitools.generator.gradle.plugin.tasks.GenerateTask::class) {
+    /*
+    ext {
+        var inConfig = layout.projectDirectory.file("config/test2.yaml")
+//        set("generatorName", "generatorName")
+        inputs.files(inConfig);
+        println(inputs.files)
+        println("two_0:")
+        println(getProperties())
+    }
+    val properties = Properties().apply {
+        load(rootProject.file("config/test3.properties").reader())
+    }
+//    generatorName="spring"
+    inputs.property("generatorName", "generatorName")
+    println("two_1:" + properties)
+    println("two_2:" + properties.get("generatorName"))
+    println(this)
+    println("two")
+    println(inputs.properties)
+    println(inputs.files)
+    println(inputs.files.files)
+//    dependsOn("one")
+//    println("two_test:" + File(layout.buildDirectory.file("config/test.yaml").get().toString()).readText())
+//    generatorName.set("spring")
+    inputSpec.set(layout.projectDirectory.file("openapi/pet.yaml").toString())
+    outputDir.set(layout.buildDirectory.dir("test").get().toString())
+     */
+    // Загружаем конфигурацию из YAML файла
+    // Загружаем конфигурацию из YAML файла
+//    doLast {
+    val yaml = org.yaml.snakeyaml.Yaml()
+    val config = yaml.load<Map<String, Any>>(file("config/test2.yaml").inputStream())
+
+    println("RI_1")
+//    this::class.members.forEach { println("- $it") }
+    //this.generatorName.set(config["generatorName"] as String)
+
+    println("RI_2")
+    // Проходим по ключам конфигурации и настраиваем задачу
+
+    // Дополнительно выводим информацию о конфигурации
+    println("Configuration for OpenAPI generation loaded from ${config}:")
+    config.forEach { (key, value) ->
+        //println("  $key: $value")
+        this.setProperty(key, value)
+    }
+//    }
+}
+
