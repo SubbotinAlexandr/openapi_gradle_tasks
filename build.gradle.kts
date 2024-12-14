@@ -194,6 +194,7 @@ val taskConfig = JsonSlurper().parse(taskConfigFile) as Map<String, Any>
 // Регистрация задач
 task("registerTasks") {
     taskConfig.forEach { (taskName, taskConfig) ->
+        println("Регестрируется задача: $taskName")
         tasks.register(taskName, org.openapitools.generator.gradle.plugin.tasks.GenerateTask::class) {
 //            doLast {
             val description = (taskConfig as Map<String, Any>)["description"]
