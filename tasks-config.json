@@ -1,0 +1,12 @@
+{
+  "task1": {
+    "generatorName": "spring",
+    "inputSpec": "openapi/pet.yaml",
+    "description": "Задача 1, выполняющая операции 1"
+  },
+  "task2": {
+    "generatorName": "java",
+    "inputSpec": "openapi/pet.yaml",
+    "description": "Задача 2, выполняющая операции 2"
+  }
+}

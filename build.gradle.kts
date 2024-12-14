@@ -1,6 +1,7 @@
 import kotlin.reflect.KProperty
 import java.util.*
 import kotlin.reflect.full.memberProperties
+import groovy.json.JsonSlurper
 
 plugins {
     id("java")
@@ -172,4 +173,39 @@ val four by tasks.registering(org.openapitools.generator.gradle.plugin.tasks.Gen
     }
 //    }
 }
+
+tasks.register("five") {
+    val yaml = org.yaml.snakeyaml.Yaml()
+    val config = yaml.load<Map<String, Any>>(file("config/test2.yaml").inputStream())
+    println("Configuration for OpenAPI generation loaded from ${config}:")
+    doLast {
+        tasks.register("six") {
+            println("six")
+        }
+    }
+}
+
+
+
+// Чтение конфигурации из файла
+val taskConfigFile = file("tasks-config.json")
+val taskConfig = JsonSlurper().parse(taskConfigFile) as Map<String, Any>
+
+// Регистрация задач
+task("registerTasks") {
+    taskConfig.forEach { (taskName, taskConfig) ->
+        tasks.register(taskName, org.openapitools.generator.gradle.plugin.tasks.GenerateTask::class) {
+//            doLast {
+            val description = (taskConfig as Map<String, Any>)["description"]
+            taskConfig.forEach { (key, value) ->
+                //println("  $key: $value")
+                this.setProperty(key, value)
+            }
+            println("Выполняется задача: $taskName")
+            println("Описание задачи: $description")
+//            }
+        }
+    }
+}
+
 
