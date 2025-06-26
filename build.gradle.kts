@@ -1,5 +1,3 @@
-import kotlin.reflect.KProperty
-import java.util.*
 import kotlin.reflect.full.memberProperties
 import groovy.json.JsonSlurper
 
@@ -188,13 +186,22 @@ tasks.register("five") {
 
 
 // Чтение конфигурации из файла
-val taskConfigFile = file("tasks-config.json")
-val taskConfig = JsonSlurper().parse(taskConfigFile) as Map<String, Any>
+val taskConfig = readConfigFile("tasks-config.json")
+
+//val ti = object : GenericTypeIndicator<HashMap<String?, String?>?>() {}
+fun readConfigFile(fileName: String): Map<String, Any> {
+//    return JsonSlurper().parse(file(fileName)) as Map<String, Any>
+    val t = JsonSlurper().parse(file(fileName))
+    return when (t) {
+        is Map<*, *> -> t.filterKeys { it is String }.mapKeys { it.key as String }.mapValues { it.value as Any }
+        else -> throw IllegalArgumentException("Parsed JSON is not a Map<String, Any>")
+    }
+}
 
 // Регистрация задач
 task("registerTasks") {
     taskConfig.forEach { (taskName, taskConfig) ->
-        println("Регестрируется задача: $taskName")
+        println("Registered task: $taskName")
         tasks.register(taskName, org.openapitools.generator.gradle.plugin.tasks.GenerateTask::class) {
 //            doLast {
             val description = (taskConfig as Map<String, Any>)["description"]
@@ -202,11 +209,25 @@ task("registerTasks") {
                 //println("  $key: $value")
                 this.setProperty(key, value)
             }
-            println("Выполняется задача: $taskName")
-            println("Описание задачи: $description")
+            println("Complete task: $taskName")
+            println("Description task: $description")
 //            }
         }
     }
 }
 
-
+val printFileContent by tasks.registering {
+    // doFirst { inputs.file("config/contract2.json")
+    val replaceTokens =
+        org.apache.tools.ant.filters.ReplaceTokens(layout.projectDirectory.file("tasks-config.json").asFile.bufferedReader());
+    (subprojects.associateBy({ it.name }, { it.projectDir.absolutePath }) + (projectDir.name to projectDir.absolutePath))
+        .forEach {
+            println("it.key:" + it.key)
+            println("it.value:" + it.value)
+            val token = org.apache.tools.ant.filters.ReplaceTokens.Token();
+            token.key = it.key
+            token.value = it.value
+            replaceTokens.addConfiguredToken(token);
+        }
+    println("T3_:" + replaceTokens.readText())
+}

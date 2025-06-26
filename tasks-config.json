@@ -1,12 +1,12 @@
 {
-  "task1": {
+  "task3": {
     "generatorName": "spring",
-    "inputSpec": "openapi/pet.yaml",
-    "description": "Задача 1, выполняющая операции 1"
+    "inputSpec": "C:\\Users\\User\\IdeaProjects\\untitled\\openapi\\pet.yaml",
+    "description": "TASK-3"
   },
-  "task2": {
+  "task4": {
     "generatorName": "java",
     "inputSpec": "openapi/pet.yaml",
-    "description": "Задача 2, выполняющая операции 2"
+    "description": "TASK-4"
   }
 }
